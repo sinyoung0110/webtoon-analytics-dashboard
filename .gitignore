@@ -21,3 +21,8 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# .gitignore에 추가할 내용
+# production .env 파일은 보안상 git에 올리지 않음
+.env.production
+.env.local
