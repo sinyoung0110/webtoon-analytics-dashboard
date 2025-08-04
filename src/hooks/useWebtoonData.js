@@ -9,7 +9,7 @@ export const useWebtoonData = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const loadData = async () => {
+    const loadData = async () => {  // 함수를 useEffect 내부에 정의
       try {
         setLoading(true);
         const data = await WebtoonAPI.fetchWebtoons();
@@ -27,6 +27,20 @@ export const useWebtoonData = () => {
   }, []);
 
   const refreshData = async () => {
+    const loadData = async () => {  // refreshData 내부에도 정의
+      try {
+        setLoading(true);
+        const data = await WebtoonAPI.fetchWebtoons();
+        setWebtoons(data);
+        setError(null);
+      } catch (err) {
+        setError(err.message);
+        console.error('웹툰 데이터 로딩 실패:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
     await loadData();
   };
 
