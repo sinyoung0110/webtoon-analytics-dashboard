@@ -80,7 +80,7 @@ const WebtoonAnalyticsDashboard = () => {
     const nodes = analysisData?.network_nodes || [];
     
     return (
-      <div className="relative w-full h-96 bg-gradient-to-br from-gray-800 to-slate-900 rounded-lg overflow-hidden border border-gray-200">
+      <div className="relative w-full h-96 bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg overflow-hidden border border-gray-200">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="grid grid-cols-4 gap-8 p-8">
             {nodes.slice(0, 12).map((node, index) => (
@@ -232,7 +232,7 @@ const WebtoonAnalyticsDashboard = () => {
                 { title: '평균 조회수', value: `${Math.round(displayStats.avg_interest / 1000)}K`, subtitle: '월간 기준', icon: '👀' },
                 { title: '태그 다양성', value: displayStats.unique_tags, subtitle: '고유 태그', icon: '🏷️' }
               ].map((card, index) => (
-                <div key={index} className="text-white rounded-xl p-6 border border-gray-200 transform hover:scale-105 transition-all duration-300" style={{backgroundColor: '#6D8196'}}>
+                <div key={index} className="text-white rounded-xl p-6 border border-gray-200 transform hover:scale-105 transition-all duration-300" style={{backgroundColor: '##B5B5B5'}}>
                   <div className="flex items-center justify-between mb-2">
                     <div className="text-3xl">{card.icon}</div>
                     <div className="text-right">
@@ -643,7 +643,7 @@ const WebtoonAnalyticsDashboard = () => {
             
             {/* 네트워크 인사이트 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-gradient-to-r from-yellow-500 to-blue-600 text-white rounded-xl p-6">
+              <div className="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl p-6">
                 <h4 className="font-bold text-lg mb-2 flex items-center">
                   <span className="mr-2">🎯</span>
                   핵심 태그
@@ -653,7 +653,7 @@ const WebtoonAnalyticsDashboard = () => {
                 </p>
               </div>
               
-              <div className="bg-gradient-to-r from-green-500 to--600 text-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-xl p-6 border border-gray-200">
                 <h4 className="font-bold text-lg mb-2 flex items-center">
                   <span className="mr-2">🔗</span>
                   강한 연결
@@ -663,7 +663,7 @@ const WebtoonAnalyticsDashboard = () => {
                 </p>
               </div>
               
-              <div className="bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl p-6 border border-gray-200">
                 <h4 className="font-bold text-lg mb-2 flex items-center">
                   <span className="mr-2">📈</span>
                   트렌드 예측
