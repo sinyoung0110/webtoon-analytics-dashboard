@@ -232,7 +232,7 @@ const WebtoonAnalyticsDashboard = () => {
                 { title: '평균 조회수', value: `${Math.round(displayStats.avg_interest / 1000)}K`, subtitle: '월간 기준', icon: '👀' },
                 { title: '태그 다양성', value: displayStats.unique_tags, subtitle: '고유 태그', icon: '🏷️' }
               ].map((card, index) => (
-                <div key={index} className="text-white rounded-xl p-6 border border-gray-200 transform hover:scale-105 transition-all duration-300" style={{backgroundColor: '##B5B5B5'}}>
+                <div key={index} className="text-white rounded-xl p-6 border border-gray-200 transform hover:scale-105 transition-all duration-300" style={{backgroundColor: '#B5B5B5'}}>
                   <div className="flex items-center justify-between mb-2">
                     <div className="text-3xl">{card.icon}</div>
                     <div className="text-right">
