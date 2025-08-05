@@ -129,21 +129,21 @@ const WebtoonAnalyticsDashboard = () => {
     const genres = ['로맨스', '액션', '판타지', '드라마', '무협/사극', '일상'];
     const demographics = ['남성-10대', '남성-20대', '남성-30대', '여성-10대', '여성-20대', '여성-30대'];
     
-     // 개선된 색상 함수 (기존 HSL 대신)
+    // 개선된 색상 함수 (초록 테마)
     const getImprovedColor = (intensity) => {
       if (intensity === 0) return '#f8fafc'; // 데이터 없음
       
-      // 5단계 현대적인 블루 그라디언트
-      if (intensity < 0.2) return '#dbeafe'; // 매우 연한
-      if (intensity < 0.4) return '#bfdbfe'; // 연한
-      if (intensity < 0.6) return '#93c5fd'; // 중간
-      if (intensity < 0.8) return '#60a5fa'; // 진한
-      return '#3b82f6'; // 매우 진한
+      // 5단계 초록 그라디언트
+      if (intensity < 0.2) return '#dcfce7'; // 매우 연한
+      if (intensity < 0.4) return '#bbf7d0'; // 연한
+      if (intensity < 0.6) return '#86efac'; // 중간
+      if (intensity < 0.8) return '#4ade80'; // 진한
+      return '#16a34a'; // 매우 진한
     };
     
     return (
       <div className="bg-white rounded-lg p-6 border border-gray-200">
-        <h3 className="text-xl font-bold mb-4 text-center text-blue-600">성별 × 연령대 × 장르 히트맵</h3>
+        <h3 className="text-xl font-bold mb-4 text-center text-green-700">성별 × 연령대 × 장르 히트맵</h3>
         <div className="grid grid-cols-7 gap-1 text-xs">
           <div></div>
           {genres.map(genre => (
@@ -232,7 +232,7 @@ const WebtoonAnalyticsDashboard = () => {
                 { title: '평균 조회수', value: `${Math.round(displayStats.avg_interest / 1000)}K`, subtitle: '월간 기준', icon: '👀' },
                 { title: '태그 다양성', value: displayStats.unique_tags, subtitle: '고유 태그', icon: '🏷️' }
               ].map((card, index) => (
-                <div key={index} className="text-white rounded-xl p-6 border border-gray-200 transform hover:scale-105 transition-all duration-300" style={{backgroundColor: '#B5B5B5'}}>
+                <div key={index} className="text-white rounded-xl p-6 border border-gray-200 transform hover:scale-105 transition-all duration-300" style={{backgroundColor: '#6D8196'}}>
                   <div className="flex items-center justify-between mb-2">
                     <div className="text-3xl">{card.icon}</div>
                     <div className="text-right">
@@ -249,14 +249,14 @@ const WebtoonAnalyticsDashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* 인기 태그 차트 */}
               <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h3 className="text-2xl font-bold text-gray-600 mb-4 flex items-center">
+                <h3 className="text-2xl font-bold text-green-700 mb-4 flex items-center">
                   <span className="mr-2">🏆</span>
                   인기 태그 TOP 15
                 </h3>
                 
                 {/* 카테고리 분석 */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                  <div className="bg-gray-50 border border-pink-200 p-4 rounded-lg">
+                  <div className="bg-gray-50 border p-4 rounded-lg">
                     <div className="flex items-center mb-2">
                       <span className="text-pink-600 text-lg mr-2">💕</span>
                       <h4 className="font-bold text-pink-700">로맨스 계열</h4>
@@ -270,7 +270,7 @@ const WebtoonAnalyticsDashboard = () => {
                     </div>
                   </div>
                   
-                  <div className="bg-gray-50 border border-blue-200 p-4 rounded-lg">
+                  <div className="bg-gray-50 border p-4 rounded-lg">
                     <div className="flex items-center mb-2">
                       <span className="text-blue-600 text-lg mr-2">⚔️</span>
                       <h4 className="font-bold text-blue-700">액션/판타지</h4>
@@ -284,7 +284,7 @@ const WebtoonAnalyticsDashboard = () => {
                     </div>
                   </div>
                   
-                  <div className="bg-gray-50 border border-purple-200 p-4 rounded-lg">
+                  <div className="bg-gray-50 border p-4 rounded-lg">
                     <div className="flex items-center mb-2">
                       <span className="text-purple-600 text-lg mr-2">🎭</span>
                       <h4 className="font-bold text-purple-700">일상/드라마</h4>
@@ -308,10 +308,10 @@ const WebtoonAnalyticsDashboard = () => {
                         const action = ['액션', '판타지', '무협', '회귀', '환생', '레벨업'];
                         const daily = ['일상','드라마', '가족', '개그', '직장', '학원'];
                         
-                        if (romance.some(r => tag.includes(r))) return { color: '#F78FB3', category: '로맨스' }; // 초록
-                        if (action.some(a => tag.includes(a))) return { color: '#3E80D3', category: '액션/판타지' }; // 블루그레이
-                        if (daily.some(d => tag.includes(d))) return { color: '#8479D9', category: '일상/드라마' }; // 에메랄드
-                        return { color: '#898989', category: '기타' }; // 연한 회색
+                        if (romance.some(r => tag.includes(r))) return { color: '#16a34a', category: '로맨스' }; // 초록
+                        if (action.some(a => tag.includes(a))) return { color: '#6D8196', category: '액션/판타지' }; // 블루그레이
+                        if (daily.some(d => tag.includes(d))) return { color: '#059669', category: '일상/드라마' }; // 에메랄드
+                        return { color: '#94a3b8', category: '기타' }; // 연한 회색
                       };
                       
                       const category = getTagCategory(tag);
@@ -412,7 +412,7 @@ const WebtoonAnalyticsDashboard = () => {
                           <span className="text-sm font-bold text-gray-800">35%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full" style={{width: '35%', backgroundColor: '#F78FB3'}}></div>
+                          <div className="h-2 rounded-full" style={{width: '35%', backgroundColor: '#16a34a'}}></div>
                         </div>
                       </div>
                       <div>
@@ -421,7 +421,7 @@ const WebtoonAnalyticsDashboard = () => {
                           <span className="text-sm font-bold text-gray-800">28%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full" style={{width: '28%', backgroundColor: '#3E80D3'}}></div>
+                          <div className="h-2 rounded-full" style={{width: '28%', backgroundColor: '#6D8196'}}></div>
                         </div>
                       </div>
                       <div>
@@ -430,7 +430,7 @@ const WebtoonAnalyticsDashboard = () => {
                           <span className="text-sm font-bold text-gray-800">22%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full" style={{width: '22%', backgroundColor: '#8479D9'}}></div>
+                          <div className="h-2 rounded-full" style={{width: '22%', backgroundColor: '#059669'}}></div>
                         </div>
                       </div>
                       <div>
@@ -475,7 +475,7 @@ const WebtoonAnalyticsDashboard = () => {
 
               {/* 평점 vs 조회수 산점도 */}
               <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h3 className="text-2xl font-bold text-gray-600 mb-4 flex items-center">
+                <h3 className="text-2xl font-bold text-green-700 mb-4 flex items-center">
                   <span className="mr-2">💎</span>
                   평점 vs 조회수 관계분석
                 </h3>
@@ -546,19 +546,19 @@ const WebtoonAnalyticsDashboard = () => {
                     <Scatter 
                       name="고조회수 (1M+)" 
                       data={webtoons.filter(w => w.interest_count >= 1000000)} 
-                      fill="#DA2C43"
+                      fill="#6D8196"
                       fillOpacity={0.7}
                     />
                     <Scatter 
                       name="중간조회수 (100K-1M)" 
                       data={webtoons.filter(w => w.interest_count >= 100000 && w.interest_count < 1000000)} 
-                      fill="#3E80D3"
+                      fill="#16a34a"
                       fillOpacity={0.7}
                     />
                     <Scatter 
                       name="저조회수 (100K 미만)" 
                       data={webtoons.filter(w => w.interest_count < 100000)} 
-                      fill="#8479D9"
+                      fill="#059669"
                       fillOpacity={0.7}
                     />
                     
@@ -680,7 +680,7 @@ const WebtoonAnalyticsDashboard = () => {
         {selectedTab === 'heatmap' && (
           <div className="space-y-8">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">🔥 다차원 히트맵 분석</h2>
+              <h2 className="text-3xl font-bold text-green-700 mb-2">🔥 다차원 히트맵 분석</h2>
               <p className="text-gray-600">성별, 연령대, 장르 간의 복합적 관계를 시각화합니다</p>
             </div>
             
@@ -689,29 +689,32 @@ const WebtoonAnalyticsDashboard = () => {
             {/* 추가 히트맵들 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* 평점 분포 히트맵 */}
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
-                <h3 className="text-xl font-bold mb-4">📊 평점대별 분포</h3>
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 className="text-xl font-bold mb-4 text-green-700">📊 평점대별 분포</h3>
                 <div className="grid grid-cols-5 gap-2">
                   {[
-                    { range: '9.8-10', count: Math.floor(webtoons.filter(w => w.rating >= 9.8).length), color: 'bg-blue-600' },
-                    { range: '9.6-9.8', count: Math.floor(webtoons.filter(w => w.rating >= 9.6 && w.rating < 9.8).length), color: 'bg-blue-500' },
-                    { range: '9.4-9.6', count: Math.floor(webtoons.filter(w => w.rating >= 9.4 && w.rating < 9.6).length), color: 'bg-blue-400' },
-                    { range: '9.2-9.4', count: Math.floor(webtoons.filter(w => w.rating >= 9.2 && w.rating < 9.4).length), color: 'bg-blue-300' },
-                    { range: '9.0-9.2', count: Math.floor(webtoons.filter(w => w.rating >= 9.0 && w.rating < 9.2).length), color: 'bg-blue-200' }
-                  ].map((item, index) => (
-                    <div key={index} className="text-center">
-                      <div className={`${item.color} text-white p-4 rounded-lg font-bold text-lg`}>
-                        {item.count}
+                    { range: '9.8-10', count: Math.floor(webtoons.filter(w => w.rating >= 9.8).length) },
+                    { range: '9.6-9.8', count: Math.floor(webtoons.filter(w => w.rating >= 9.6 && w.rating < 9.8).length) },
+                    { range: '9.4-9.6', count: Math.floor(webtoons.filter(w => w.rating >= 9.4 && w.rating < 9.6).length) },
+                    { range: '9.2-9.4', count: Math.floor(webtoons.filter(w => w.rating >= 9.2 && w.rating < 9.4).length) },
+                    { range: '9.0-9.2', count: Math.floor(webtoons.filter(w => w.rating >= 9.0 && w.rating < 9.2).length) }
+                  ].map((item, index) => {
+                    const colors = ['#6D8196', '#7a8fa4', '#8a9db1', '#9aabbf', '#aab9cc'];
+                    return (
+                      <div key={index} className="text-center">
+                        <div className="text-white p-4 rounded-lg font-bold text-lg" style={{backgroundColor: colors[index]}}>
+                          {item.count}
+                        </div>
+                        <div className="text-xs mt-2 text-gray-600">{item.range}</div>
                       </div>
-                      <div className="text-xs mt-2 text-gray-600">{item.range}</div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
               
               {/* 조회수 분포 히트맵 */}
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
-                <h3 className="text-xl font-bold mb-4">👀 조회수 구간별 분포</h3>
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 className="text-xl font-bold mb-4 text-green-700">👀 조회수 구간별 분포</h3>
                 <div className="space-y-2">
                   {[
                     { range: '1M 이상', count: webtoons.filter(w => w.interest_count >= 1000000).length },
@@ -734,7 +737,7 @@ const WebtoonAnalyticsDashboard = () => {
                         <div className="w-20 text-sm text-gray-600">{item.range}</div>
                         <div className="flex-1 bg-gray-200 rounded-full h-6 mx-3">
                           <div 
-                            className="bg-gradient-to-r from-blue-300 to-blue-500 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold transition-all duration-500"
+                            className="bg-gradient-to-r from-green-500 to-emerald-600 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold transition-all duration-500"
                             style={{ width: `${Math.max(8, percentage)}%` }}
                           >
                             {item.count}
@@ -748,6 +751,7 @@ const WebtoonAnalyticsDashboard = () => {
             </div>
           </div>
         )}
+
 
         {/* 추천 시스템 탭 */}
         {selectedTab === 'recommend' && (
