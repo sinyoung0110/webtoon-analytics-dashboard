@@ -1,6 +1,6 @@
 // src/App.js
-import React, { useState, useMemo } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ScatterChart, Scatter, PieChart, Pie, Cell, LineChart, Line, ResponsiveContainer, RadialBarChart, RadialBar, Area, AreaChart } from 'recharts';
+import React, { useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ScatterChart, Scatter, ResponsiveContainer } from 'recharts';
 import { useWebtoonData, useTagAnalysis, useHeatmapData, useStatistics, useRecommendations } from './hooks/useWebtoonData';
 
 const WebtoonAnalyticsDashboard = () => {
@@ -737,7 +737,7 @@ const WebtoonAnalyticsDashboard = () => {
                         <div className="w-20 text-sm text-gray-600">{item.range}</div>
                         <div className="flex-1 bg-gray-200 rounded-full h-6 mx-3">
                           <div 
-                            className="bg-gradient-to-r from-green-500 to-emerald-600 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold transition-all duration-500"
+                            className="bg-gradient-to-r from-gray-300 to-green-500 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold transition-all duration-500"
                             style={{ width: `${Math.max(8, percentage)}%` }}
                           >
                             {item.count}
