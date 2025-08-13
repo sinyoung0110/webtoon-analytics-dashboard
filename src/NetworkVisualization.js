@@ -126,17 +126,17 @@ const NetworkVisualization = ({
     return null;
   };
 
-  // 한국어 태그 카테고리 분류
+  // 백엔드와 동일한 한국어 태그 카테고리 분류
   const getKoreanTagCategory = (tag) => {
     const categories = {
       '장르': ['로맨스', '액션', '판타지', '드라마', '스릴러', '호러', '코미디', '일상', '무협'],
       '테마': ['회귀', '성장', '복수', '학원', '현실', '게임', '모험', '요리', '스포츠'],
-      '설정': ['서양', '귀족', '현대', '미래', '과거'],
-      '스타일': ['명작', '단편', '러블리']
+      '스타일': ['명작', '단편', '러블리'],
+      '설정': ['서양', '귀족', '현대', '미래', '과거', '농구']
     };
     
     for (const [category, tags] of Object.entries(categories)) {
-      if (tags.some(t => tag.includes(t) || t.includes(tag))) {
+      if (tags.some(keyword => tag.includes(keyword))) {
         return category;
       }
     }
@@ -314,12 +314,12 @@ const NetworkVisualization = ({
         hideTooltip();
       });
     
-    // 노드 아이콘
+    // 노드 텍스트 (실제 태그명)
     nodeGroups.append("text")
-      .text(d => getCategoryIcon(d.group))
+      .text(d => d.id.length > 4 ? d.id.substring(0, 3) + '..' : d.id)
       .attr("text-anchor", "middle")
       .attr("dy", "0.35em")
-      .attr("font-size", d => Math.min(d.size / 3, 14))
+      .attr("font-size", d => Math.min(d.size / 2.5, 14))
       .attr("font-weight", "bold")
       .attr("fill", "#ffffff")
       .style("pointer-events", "none");
@@ -391,16 +391,6 @@ const NetworkVisualization = ({
     }
   }, [networkData, renderNetwork]);
 
-  const getCategoryIcon = (category) => {
-    const icons = {
-      '장르': 'G',
-      '테마': 'T', 
-      '설정': 'S',
-      '스타일': 'Y',
-      '기타': 'E'
-    };
-    return icons[category] || 'E';
-  };
 
   const showTooltip = (event, d) => {
     const tooltip = d3.select("body").append("div")
