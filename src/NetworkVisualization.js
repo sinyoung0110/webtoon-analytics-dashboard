@@ -35,11 +35,31 @@ const NetworkVisualization = ({
 
   // 네트워크 데이터 생성 (백엔드 API 형식 또는 분석 데이터 기반)
   const generateNetworkFromAnalysis = (analysis) => {
-    console.log('NetworkVisualization - 받은 데이터:', analysis);
+    console.log('NetworkVisualization - 받은 전체 데이터:', analysis);
     
-    // 백엔드 API 형식 처리 (nodes와 links가 이미 있는 경우)
+    // 백엔드 API 형식 처리 (data.nodes와 data.links가 있는 경우)
+    if (analysis && analysis.data && analysis.data.nodes && analysis.data.links) {
+      console.log('NetworkVisualization - 백엔드 API data 형식 데이터 사용');
+      const { nodes, links, summary } = analysis.data;
+      return {
+        nodes: nodes.map(node => ({
+          ...node,
+          selected: selectedTags.includes(node.id)
+        })),
+        links: links,
+        summary: summary || {
+          total_nodes: nodes.length,
+          total_links: links.length,
+          selected_tags: selectedTags,
+          max_correlation: Math.max(...links.map(l => l.value), 0),
+          avg_correlation: links.length > 0 ? links.reduce((sum, l) => sum + l.value, 0) / links.length : 0
+        }
+      };
+    }
+    
+    // 직접 nodes와 links가 있는 경우 (이미 추출된 data)
     if (analysis && analysis.nodes && analysis.links) {
-      console.log('NetworkVisualization - 백엔드 API 형식 데이터 사용');
+      console.log('NetworkVisualization - 직접 nodes/links 형식 데이터 사용');
       return {
         nodes: analysis.nodes.map(node => ({
           ...node,
@@ -217,9 +237,16 @@ const NetworkVisualization = ({
       .attr("height", height)
       .attr("fill", "url(#networkBg)");
     
+    // 노드와 링크 데이터를 d3가 이해할 수 있도록 복사
+    const nodesCopy = networkData.nodes.map(d => ({...d}));
+    const linksCopy = networkData.links.map(d => ({...d}));
+    
+    console.log('NetworkVisualization - 시뮬레이션 노드:', nodesCopy);
+    console.log('NetworkVisualization - 시뮬레이션 링크:', linksCopy);
+    
     // 시뮬레이션 설정
-    const simulation = d3.forceSimulation(networkData.nodes)
-      .force("link", d3.forceLink(networkData.links)
+    const simulation = d3.forceSimulation(nodesCopy)
+      .force("link", d3.forceLink(linksCopy)
         .id(d => d.id)
         .distance(d => 100 - (d.value * 30))
         .strength(d => d.value * 0.8))
@@ -235,7 +262,7 @@ const NetworkVisualization = ({
     const links = g.append("g")
       .attr("class", "links")
       .selectAll("line")
-      .data(networkData.links)
+      .data(linksCopy)
       .enter().append("line")
       .attr("stroke", "#94a3b8")
       .attr("stroke-opacity", d => 0.3 + (d.value * 0.4))
@@ -246,7 +273,7 @@ const NetworkVisualization = ({
     const nodeGroups = g.append("g")
       .attr("class", "nodes")
       .selectAll("g")
-      .data(networkData.nodes)
+      .data(nodesCopy)
       .enter().append("g")
       .attr("class", "node-group")
       .style("cursor", "pointer")
@@ -425,10 +452,15 @@ const NetworkVisualization = ({
       insights.push(`🎯 "${centralTag.id}"가 가장 중심적인 태그입니다`);
     }
     
-    if (networkData.links.length > 0) {
+    if (networkData.links && networkData.links.length > 0) {
       const strongestLink = networkData.links.reduce((max, link) => 
         link.value > (max?.value || 0) ? link : max, null);
-      insights.push(`🔗 "${strongestLink.source}" ↔ "${strongestLink.target}" 연결이 가장 강합니다`);
+      if (strongestLink) {
+        // source와 target이 문자열인 경우와 객체인 경우 모두 처리
+        const sourceId = typeof strongestLink.source === 'string' ? strongestLink.source : strongestLink.source.id;
+        const targetId = typeof strongestLink.target === 'string' ? strongestLink.target : strongestLink.target.id;
+        insights.push(`🔗 "${sourceId}" ↔ "${targetId}" 연결이 가장 강합니다`);
+      }
     }
     
     if (selectedTags.length > 0) {

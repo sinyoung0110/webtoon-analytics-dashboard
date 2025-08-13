@@ -620,6 +620,19 @@ const WebtoonAnalyticsDashboard = () => {
                         }
                       }}
                     />
+                    
+                    {/* 디버깅 정보 */}
+                    <div className="mt-4 p-4 bg-gray-100 rounded-lg text-sm">
+                      <h4 className="font-bold mb-2">🔍 디버깅 정보:</h4>
+                      <div>networkData: {networkData ? '✅ 있음' : '❌ 없음'}</div>
+                      <div>analysisData: {analysisData ? '✅ 있음' : '❌ 없음'}</div>
+                      {networkData && (
+                        <div>
+                          <div>네트워크 노드 수: {networkData.data?.nodes?.length || networkData.nodes?.length || 0}</div>
+                          <div>네트워크 링크 수: {networkData.data?.links?.length || networkData.links?.length || 0}</div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
             
