@@ -1,7 +1,7 @@
 // src/App.js
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ScatterChart, Scatter, ResponsiveContainer } from 'recharts';
-import { useWebtoonData, useTagAnalysis, useHeatmapData, useStatistics, useRecommendations } from './hooks/useWebtoonData';
+import { useWebtoonData, useTagAnalysis, useHeatmapData, useStatistics, useRecommendations, useNetworkAnalysis } from './hooks/useWebtoonData';
 import NetworkVisualization from './NetworkVisualization';
 import * as d3 from 'd3';
 
@@ -15,6 +15,9 @@ const WebtoonAnalyticsDashboard = () => {
   const { heatmapData, loading: heatmapLoading, error: heatmapError } = useHeatmapData();
   const { stats, loading: statsLoading, error: statsError } = useStatistics();
   const { recommendations, loading: recommendationsLoading, getRecommendations } = useRecommendations();
+  
+  // 네트워크 분석을 위한 별도 hook
+  const { networkData, loading: networkLoading, fetchNetworkData } = useNetworkAnalysis();
 
   // 추천 처리
   const handleWebtoonSelect = async (title) => {
@@ -596,13 +599,25 @@ const WebtoonAnalyticsDashboard = () => {
                       <p className="text-gray-600">태그 간의 연관관계를 시각화하여 웹툰 트렌드를 파악합니다</p>
                     </div>
                     
+                    {networkLoading && (
+                      <div className="text-center py-8">
+                        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
+                        <p className="text-gray-600">네트워크 데이터 로딩 중...</p>
+                      </div>
+                    )}
+                    
                     <NetworkVisualization 
-                      analysisData={analysisData}
+                      analysisData={networkData || analysisData}
                       width={900}
                       height={700}
                       className="mb-6"
                       onTagSelect={(tag, selectedTags) => {
-                        console.log('선택된 태그:', tag, selectedTags);
+                        console.log('App.js - 선택된 태그:', tag, selectedTags);
+                        // 선택된 태그로 네트워크 데이터를 다시 요청
+                        if (fetchNetworkData) {
+                          console.log('App.js - fetchNetworkData 호출:', selectedTags);
+                          fetchNetworkData(selectedTags);
+                        }
                       }}
                     />
                   </div>

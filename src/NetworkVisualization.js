@@ -33,48 +33,74 @@ const NetworkVisualization = ({
     '설정': ['학원', '무협', '귀족', '게임']
   };
 
-  // 샘플 네트워크 데이터 생성 (analysisData 기반)
+  // 네트워크 데이터 생성 (백엔드 API 형식 또는 분석 데이터 기반)
   const generateNetworkFromAnalysis = (analysis) => {
-    if (!analysis || !analysis.tag_frequency) return null;
+    console.log('NetworkVisualization - 받은 데이터:', analysis);
+    
+    // 백엔드 API 형식 처리 (nodes와 links가 이미 있는 경우)
+    if (analysis && analysis.nodes && analysis.links) {
+      console.log('NetworkVisualization - 백엔드 API 형식 데이터 사용');
+      return {
+        nodes: analysis.nodes.map(node => ({
+          ...node,
+          selected: selectedTags.includes(node.id)
+        })),
+        links: analysis.links,
+        summary: analysis.summary || {
+          total_nodes: analysis.nodes.length,
+          total_links: analysis.links.length,
+          selected_tags: selectedTags,
+          max_correlation: Math.max(...analysis.links.map(l => l.value), 0),
+          avg_correlation: analysis.links.length > 0 ? analysis.links.reduce((sum, l) => sum + l.value, 0) / analysis.links.length : 0
+        }
+      };
+    }
+    
+    // 기존 tag_frequency 형식 처리 (fallback 데이터)
+    if (analysis && analysis.tag_frequency) {
+      console.log('NetworkVisualization - tag_frequency 형식 데이터 사용');
+      const nodes = analysis.tag_frequency.slice(0, 15).map(([tag, count], index) => ({
+        id: tag,
+        count: count,
+        influence: Math.max(0.3, 1 - (index * 0.05)),
+        size: Math.min(Math.max(count * 3, 20), 50),
+        group: getKoreanTagCategory(tag),
+        selected: selectedTags.includes(tag),
+        avg_rating: 9.0 + Math.random() * 0.8
+      }));
 
-    const nodes = analysis.tag_frequency.slice(0, 15).map(([tag, count], index) => ({
-      id: tag,
-      count: count,
-      influence: Math.max(0.3, 1 - (index * 0.05)),
-      size: Math.min(Math.max(count * 3, 20), 50),
-      group: getKoreanTagCategory(tag),
-      selected: selectedTags.includes(tag),
-      avg_rating: 9.0 + Math.random() * 0.8
-    }));
-
-    // 링크 생성 (태그 간 가상 연관성)
-    const links = [];
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < Math.min(nodes.length, i + 4); j++) {
-        const correlation = Math.random() * 0.6 + 0.3;
-        if (correlation > 0.4) {
-          links.push({
-            source: nodes[i].id,
-            target: nodes[j].id,
-            value: correlation,
-            width: Math.max(1, correlation * 6),
-            co_occurrence: Math.floor(correlation * nodes[i].count * 0.5)
-          });
+      // 링크 생성 (태그 간 가상 연관성)
+      const links = [];
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < Math.min(nodes.length, i + 4); j++) {
+          const correlation = Math.random() * 0.6 + 0.3;
+          if (correlation > 0.4) {
+            links.push({
+              source: nodes[i].id,
+              target: nodes[j].id,
+              value: correlation,
+              width: Math.max(1, correlation * 6),
+              co_occurrence: Math.floor(correlation * nodes[i].count * 0.5)
+            });
+          }
         }
       }
-    }
 
-    return {
-      nodes,
-      links: links.slice(0, 20),
-      summary: {
-        total_nodes: nodes.length,
-        total_links: links.length,
-        selected_tags: selectedTags,
-        max_correlation: Math.max(...links.map(l => l.value), 0),
-        avg_correlation: links.length > 0 ? links.reduce((sum, l) => sum + l.value, 0) / links.length : 0
-      }
-    };
+      return {
+        nodes,
+        links: links.slice(0, 20),
+        summary: {
+          total_nodes: nodes.length,
+          total_links: links.length,
+          selected_tags: selectedTags,
+          max_correlation: Math.max(...links.map(l => l.value), 0),
+          avg_correlation: links.length > 0 ? links.reduce((sum, l) => sum + l.value, 0) / links.length : 0
+        }
+      };
+    }
+    
+    console.log('NetworkVisualization - 유효한 데이터가 없음');
+    return null;
   };
 
   // 한국어 태그 카테고리 분류
@@ -98,20 +124,26 @@ const NetworkVisualization = ({
   useEffect(() => {
     if (analysisData) {
       const generated = generateNetworkFromAnalysis(analysisData);
+      console.log('NetworkVisualization - 생성된 네트워크 데이터:', generated);
       setNetworkData(generated);
     }
-  }, [analysisData, selectedTags]);
+  }, [analysisData, selectedTags, generateNetworkFromAnalysis]);
 
   const handleTagSelect = (tag) => {
+    console.log('NetworkVisualization - 태그 클릭됨:', tag);
     const newSelectedTags = selectedTags.includes(tag)
       ? selectedTags.filter(t => t !== tag)
       : [...selectedTags, tag];
     
+    console.log('NetworkVisualization - 새로운 선택된 태그들:', newSelectedTags);
     setSelectedTags(newSelectedTags);
     
     // 부모 컴포넌트에 태그 선택 알림
     if (onTagSelect) {
+      console.log('NetworkVisualization - onTagSelect 콜백 호출');
       onTagSelect(tag, newSelectedTags);
+    } else {
+      console.log('NetworkVisualization - onTagSelect 콜백이 없음');
     }
   };
 
@@ -241,6 +273,7 @@ const NetworkVisualization = ({
       .attr("stroke-width", d => selectedTags.includes(d.id) ? 4 : 2)
       .on("click", (event, d) => {
         event.stopPropagation();
+        console.log('NetworkVisualization - d3 노드 클릭 이벤트:', d.id);
         handleTagSelect(d.id);
       })
       .on("mouseover", function(event, d) {
