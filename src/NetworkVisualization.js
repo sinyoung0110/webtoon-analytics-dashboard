@@ -314,22 +314,7 @@ const NetworkVisualization = ({
         hideTooltip();
       });
     
-    // 노드 텍스트 (실제 태그명)
-    nodeGroups.append("text")
-      .text(d => d.id.length > 4 ? d.id.substring(0, 3) + '..' : d.id)
-      .attr("text-anchor", "middle")
-      .attr("dy", "0.35em")
-      .attr("font-size", d => Math.min(d.size / 3, 11))
-      .attr("font-weight", "bold")
-      .attr("fill", d => {
-        // 노드 배경색이 밝은 경우 검은 글씨, 어두운 경우 흰 글씨
-        const bgColor = d3.color(colorScale(d.group));
-        const luminance = 0.299 * bgColor.r + 0.587 * bgColor.g + 0.114 * bgColor.b;
-        return luminance > 128 ? "#1f2937" : "#ffffff";
-      })
-      .style("pointer-events", "none");
-    
-    // 노드 레이블 (하얀 배경에서도 보이도록 그림자 효과)
+    // 노드 레이블 (밖에만 표시)
     nodeGroups.append("text")
       .text(d => d.id)
       .attr("text-anchor", "middle")
