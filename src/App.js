@@ -603,7 +603,7 @@ const WebtoonAnalyticsDashboard = () => {
                       <div className="text-center py-8">
                         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
                         <p className="text-gray-600">네트워크 데이터 로딩 중...</p>
-                      </div>
+                      </div>  
                     )}
                     
                     <NetworkVisualization 

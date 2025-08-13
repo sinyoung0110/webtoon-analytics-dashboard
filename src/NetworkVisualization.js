@@ -1,6 +1,9 @@
 // NetworkVisualization.js - 기존 App.js와 통합 가능한 컴포넌트
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as d3 from 'd3';
+
+console.log('NetworkVisualization - d3 import 성공:', d3);
+console.log('NetworkVisualization - d3.select 함수 사용 가능:', typeof d3.select);
 
 const NetworkVisualization = ({ 
   analysisData = null, 
@@ -147,7 +150,7 @@ const NetworkVisualization = ({
       console.log('NetworkVisualization - 생성된 네트워크 데이터:', generated);
       setNetworkData(generated);
     }
-  }, [analysisData, selectedTags, generateNetworkFromAnalysis]);
+  }, [analysisData, selectedTags]);
 
   const handleTagSelect = (tag) => {
     console.log('NetworkVisualization - 태그 클릭됨:', tag);
@@ -176,17 +179,37 @@ const NetworkVisualization = ({
   };
 
   useEffect(() => {
+    console.log('NetworkVisualization - useEffect 호출됨');
+    console.log('NetworkVisualization - networkData:', networkData);
+    console.log('NetworkVisualization - svgRef.current:', svgRef.current);
+    console.log('NetworkVisualization - d3 사용 가능:', typeof d3);
+    
     if (networkData && svgRef.current) {
+      console.log('NetworkVisualization - renderNetwork 호출 시도');
       renderNetwork();
+    } else {
+      console.log('NetworkVisualization - renderNetwork 호출 안함 - 조건 불충족');
     }
-  }, [networkData]);
+  }, [networkData, renderNetwork]);
 
-  const renderNetwork = () => {
-    const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove();
+  const renderNetwork = useCallback(() => {
+    console.log('NetworkVisualization - renderNetwork 함수 시작');
+    console.log('NetworkVisualization - svgRef.current:', svgRef.current);
+    
+    let svg;
+    try {
+      svg = d3.select(svgRef.current);
+      console.log('NetworkVisualization - d3.select 성공:', svg);
+      svg.selectAll("*").remove();
+      console.log('NetworkVisualization - svg 초기화 완료');
+    } catch (error) {
+      console.error('NetworkVisualization - d3.select 오류:', error);
+      return;
+    }
     
     if (!networkData || !networkData.nodes || networkData.nodes.length === 0) {
       // 데이터가 없을 때
+      console.log('NetworkVisualization - 네트워크 데이터 없음, 기본 메시지 표시');
       svg.attr("width", width).attr("height", height);
       const g = svg.append("g");
       g.append("rect")
@@ -391,7 +414,7 @@ const NetworkVisualization = ({
       d.fx = null;
       d.fy = null;
     }
-  };
+  }, [networkData, selectedTags, handleTagSelect, width, height]);
 
   const getCategoryIcon = (category) => {
     const icons = {
