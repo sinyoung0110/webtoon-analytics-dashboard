@@ -152,7 +152,7 @@ const NetworkVisualization = ({
     }
   }, [analysisData, selectedTags]);
 
-  const handleTagSelect = (tag) => {
+  const handleTagSelect = useCallback((tag) => {
     console.log('NetworkVisualization - 태그 클릭됨:', tag);
     const newSelectedTags = selectedTags.includes(tag)
       ? selectedTags.filter(t => t !== tag)
@@ -168,7 +168,7 @@ const NetworkVisualization = ({
     } else {
       console.log('NetworkVisualization - onTagSelect 콜백이 없음');
     }
-  };
+  }, [selectedTags, setSelectedTags, onTagSelect]);
 
   const focusOnCategory = (categoryTags) => {
     setSelectedTags(categoryTags);
@@ -177,20 +177,6 @@ const NetworkVisualization = ({
   const resetNetwork = () => {
     setSelectedTags([]);
   };
-
-  useEffect(() => {
-    console.log('NetworkVisualization - useEffect 호출됨');
-    console.log('NetworkVisualization - networkData:', networkData);
-    console.log('NetworkVisualization - svgRef.current:', svgRef.current);
-    console.log('NetworkVisualization - d3 사용 가능:', typeof d3);
-    
-    if (networkData && svgRef.current) {
-      console.log('NetworkVisualization - renderNetwork 호출 시도');
-      renderNetwork();
-    } else {
-      console.log('NetworkVisualization - renderNetwork 호출 안함 - 조건 불충족');
-    }
-  }, [networkData, renderNetwork]);
 
   const renderNetwork = useCallback(() => {
     console.log('NetworkVisualization - renderNetwork 함수 시작');
@@ -414,7 +400,21 @@ const NetworkVisualization = ({
       d.fx = null;
       d.fy = null;
     }
-  }, [networkData, selectedTags, handleTagSelect, width, height]);
+  }, [networkData, selectedTags, width, height, handleTagSelect]);
+
+  useEffect(() => {
+    console.log('NetworkVisualization - useEffect 호출됨');
+    console.log('NetworkVisualization - networkData:', networkData);
+    console.log('NetworkVisualization - svgRef.current:', svgRef.current);
+    console.log('NetworkVisualization - d3 사용 가능:', typeof d3);
+    
+    if (networkData && svgRef.current) {
+      console.log('NetworkVisualization - renderNetwork 호출 시도');
+      renderNetwork();
+    } else {
+      console.log('NetworkVisualization - renderNetwork 호출 안함 - 조건 불충족');
+    }
+  }, [networkData, renderNetwork]);
 
   const getCategoryIcon = (category) => {
     const icons = {
