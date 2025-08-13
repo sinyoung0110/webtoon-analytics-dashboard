@@ -256,14 +256,14 @@ const WebtoonAnalyticsDashboard = () => {
                   </div>
                 </div>
 
-                <ResponsiveContainer width="100%" height={400}>
+                <ResponsiveContainer width="100%" height={300}>
                   <BarChart 
                     data={(analysisData?.tag_frequency || []).slice(0, 10).map(([tag, count], index) => {
                       // 조화로운 색상 매핑 - 원래 색상 유지
                       const getTagCategory = (tag) => {
-                        const romance = ['로맨스', '순정', '소꿉친구', '첫사랑', '연애'];
-                        const action = ['액션', '판타지', '무협', '회귀', '환생', '레벨업'];
-                        const daily = ['일상','드라마', '가족', '개그', '직장', '학원'];
+                        const romance = ['로맨스', '순정', '소꿉친구', '첫사랑', '연애', '완결로맨스'];
+                        const action = ['액션', '판타지', '무협', '회귀', '환생', '레벨업','완결액션','완결판타지'];
+                        const daily = ['일상','드라마', '가족', '개그', '직장', '학원','완결일상'];
                         
                         if (romance.some(r => tag.includes(r))) return { color: '#16a34a', category: '로맨스' }; // 초록
                         if (action.some(a => tag.includes(a))) return { color: '#6D8196', category: '액션/판타지' }; // 블루그레이
@@ -368,37 +368,37 @@ const WebtoonAnalyticsDashboard = () => {
                       <div>
                         <div className="flex justify-between mb-1">
                           <span className="text-sm font-medium text-gray-700">로맨스 계열</span>
-                          <span className="text-sm font-bold text-gray-800">35%</span>
+                          <span className="text-sm font-bold text-gray-800">50%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full" style={{width: '35%', backgroundColor: '#16a34a'}}></div>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex justify-between mb-1">
-                          <span className="text-sm font-medium text-gray-700">액션/판타지</span>
-                          <span className="text-sm font-bold text-gray-800">28%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full" style={{width: '28%', backgroundColor: '#6D8196'}}></div>
+                          <div className="h-2 rounded-full" style={{width: '50%', backgroundColor: '#16a34a'}}></div>
                         </div>
                       </div>
                       <div>
                         <div className="flex justify-between mb-1">
                           <span className="text-sm font-medium text-gray-700">일상/드라마</span>
-                          <span className="text-sm font-bold text-gray-800">22%</span>
+                          <span className="text-sm font-bold text-gray-800">38%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full" style={{width: '22%', backgroundColor: '#059669'}}></div>
+                          <div className="h-2 rounded-full" style={{width: '38%', backgroundColor: '#059669'}}></div>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium text-gray-700">액션/판타지</span>
+                          <span className="text-sm font-bold text-gray-800">34%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="h-2 rounded-full" style={{width: '34%', backgroundColor: '#6D8196'}}></div>
                         </div>
                       </div>
                       <div>
                         <div className="flex justify-between mb-1">
                           <span className="text-sm font-medium text-gray-700">기타</span>
-                          <span className="text-sm font-bold text-gray-800">15%</span>
+                          <span className="text-sm font-bold text-gray-800">21%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full" style={{width: '15%', backgroundColor: '#94a3b8'}}></div>
+                          <div className="h-2 rounded-full" style={{width: '21%', backgroundColor: '#94a3b8'}}></div>
                         </div>
                       </div>
                     </div>
@@ -415,7 +415,7 @@ const WebtoonAnalyticsDashboard = () => {
                     <div>
                       <p className="font-medium text-gray-700 mb-2">🎯 독자 선호도 패턴:</p>
                       <ul className="text-gray-600 space-y-1">
-                        <li>• <strong>로맨스</strong>가 압도적 1위 (전체 35%)</li>
+                        <li>• <strong>로맨스</strong>가 압도적 1위 (전체 50.1%)</li>
                         <li>• <strong>회귀/환생</strong> 장르 급부상</li>
                         <li>• 성별 기반 장르 선호도 뚜렷</li>
                       </ul>
@@ -505,7 +505,7 @@ const WebtoonAnalyticsDashboard = () => {
                     <Scatter 
                       name="고조회수 (1M+)" 
                       data={webtoons.filter(w => w.interest_count >= 1000000)} 
-                      fill="#6D8196"
+                      fill="#059669"
                       fillOpacity={0.7}
                       r={1}
                     />
@@ -519,7 +519,7 @@ const WebtoonAnalyticsDashboard = () => {
                     <Scatter 
                       name="저조회수 (100K 미만)" 
                       data={webtoons.filter(w => w.interest_count < 100000)} 
-                      fill="#059669"
+                      fill="#6D8196"
                       fillOpacity={0.7}
                       r={3}
                     />
