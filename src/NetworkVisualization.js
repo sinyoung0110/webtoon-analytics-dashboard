@@ -29,11 +29,11 @@ const NetworkVisualization = ({
     '무협', '일상', '귀족', '복수', '현실', '코미디', '스릴러', '게임'
   ];
 
-  // 장르 카테고리
-  const genreCategories = {
-    '주요장르': ['로맨스', '액션', '판타지', '드라마'],
-    '테마': ['회귀', '성장', '복수', '현실'],
-    '설정': ['학원', '무협', '귀족', '게임']
+  // 분류 태그 카테고리 - 사용자 제공 분류 사용
+  const tagCategories = {
+    '장르': ['로맨스', '액션', '판타지', '드라마', '스릴러', '호러', '코미디', '일상', '무협'],
+    '테마': ['회귀', '성장', '복수', '학원', '현실', '게임', '모험', '요리', '스포츠'],
+    '설정': ['서양', '귀족', '현대', '미래', '과거', '농구']
   };
 
   // 네트워크 데이터 생성 (백엔드 API 형식 또는 분석 데이터 기반)
@@ -86,7 +86,7 @@ const NetworkVisualization = ({
         id: tag,
         count: count,
         influence: Math.max(0.3, 1 - (index * 0.05)),
-        size: Math.min(Math.max(count * 3, 20), 50),
+        size: Math.min(Math.max(count * 2, 15), 35),
         group: getKoreanTagCategory(tag),
         selected: selectedTags.includes(tag),
         avg_rating: 9.0 + Math.random() * 0.8
@@ -274,7 +274,7 @@ const NetworkVisualization = ({
     
     // 메인 노드
     const nodes = nodeGroups.append("circle")
-      .attr("r", d => d.size)
+      .attr("r", d => Math.min(d.size, 25))
       .attr("fill", d => {
         const baseColor = colorScale(d.group);
         return selectedTags.includes(d.id) ? baseColor : d3.interpolate(baseColor, "#ffffff")(0.2);
@@ -289,7 +289,7 @@ const NetworkVisualization = ({
       .on("mouseover", function(event, d) {
         d3.select(this)
           .transition().duration(200)
-          .attr("r", d.size * 1.15)
+          .attr("r", Math.min(d.size * 1.15, 30))
           .attr("stroke-width", 4);
         
         // 연결된 링크 강조
@@ -304,7 +304,7 @@ const NetworkVisualization = ({
       .on("mouseout", function(event, d) {
         d3.select(this)
           .transition().duration(200)
-          .attr("r", d.size)
+          .attr("r", Math.min(d.size, 25))
           .attr("stroke-width", selectedTags.includes(d.id) ? 4 : 2);
         
         links
@@ -319,21 +319,27 @@ const NetworkVisualization = ({
       .text(d => d.id.length > 4 ? d.id.substring(0, 3) + '..' : d.id)
       .attr("text-anchor", "middle")
       .attr("dy", "0.35em")
-      .attr("font-size", d => Math.min(d.size / 2.5, 14))
+      .attr("font-size", d => Math.min(d.size / 3, 11))
       .attr("font-weight", "bold")
-      .attr("fill", "#ffffff")
+      .attr("fill", d => {
+        // 노드 배경색이 밝은 경우 검은 글씨, 어두운 경우 흰 글씨
+        const bgColor = d3.color(colorScale(d.group));
+        const luminance = 0.299 * bgColor.r + 0.587 * bgColor.g + 0.114 * bgColor.b;
+        return luminance > 128 ? "#1f2937" : "#ffffff";
+      })
       .style("pointer-events", "none");
     
-    // 노드 레이블
+    // 노드 레이블 (하얀 배경에서도 보이도록 그림자 효과)
     nodeGroups.append("text")
       .text(d => d.id)
       .attr("text-anchor", "middle")
-      .attr("dy", d => d.size + 16)
+      .attr("dy", d => Math.min(d.size, 25) + 16)
       .attr("font-size", "12px")
-      .attr("font-weight", "600")
+      .attr("font-weight", "700")
       .attr("fill", "#1f2937")
       .attr("stroke", "#ffffff")
-      .attr("stroke-width", 2)
+      .attr("stroke-width", 3)
+      .attr("paint-order", "stroke")
       .style("pointer-events", "none");
     
     // 영향력 표시 (간단한 원)
@@ -499,7 +505,7 @@ const NetworkVisualization = ({
             
             {/* 카테고리별 선택 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {Object.entries(genreCategories).map(([category, tags]) => (
+              {Object.entries(tagCategories).map(([category, tags]) => (
                 <div key={category} className="bg-gray-50 rounded-lg p-4 border">
                   <h4 className="font-bold text-gray-800 mb-2">{category}</h4>
                   <button
