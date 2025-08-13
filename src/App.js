@@ -334,7 +334,7 @@ const WebtoonAnalyticsDashboard = () => {
                 </ResponsiveContainer>
                 
                 {/* 트렌드 분석 */}
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <h4 className="font-bold text-gray-800 mb-3 flex items-center">
                       <span className="mr-2">📈</span>
@@ -520,7 +520,7 @@ const WebtoonAnalyticsDashboard = () => {
                       name="저조회수 (100K 미만)" 
                       data={webtoons.filter(w => w.interest_count < 100000)} 
                       fill="#6D8196"
-                      fillOpacity={0.3}
+                      fillOpacity={0.5}
                       r={1}
                     />
                     
