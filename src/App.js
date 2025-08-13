@@ -78,9 +78,6 @@ const WebtoonAnalyticsDashboard = () => {
     { id: 'heatmap', name: '히트맵 분석', icon: '🔥', color: 'bg-green-600' },
     { id: 'recommend', name: '추천 시스템', icon: '🎯', color: 'bg-green-600' }
   ];
-  const COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98FB98', '#F4A460', '#20B2AA', '#FFB6C1'];
-
-// NetworkVisualization 컴포넌트는 별도 파일에서 import됨
 
   // 히트맵 컴포넌트
   const CustomHeatmap = () => {
@@ -207,11 +204,11 @@ const WebtoonAnalyticsDashboard = () => {
 
             {/* 차트 그리드 */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* 인기 태그 차트 */}
+              {/* 인기 태그 차트 - TOP 10으로 변경 */}
               <div className="bg-white rounded-xl border border-gray-200 p-6">
                 <h3 className="text-2xl font-bold text-green-700 mb-4 flex items-center">
                   <span className="mr-2">🏆</span>
-                  인기 태그 TOP 15
+                  인기 태그 TOP 10
                 </h3>
                 
                 {/* 카테고리 분석 */}
@@ -261,17 +258,17 @@ const WebtoonAnalyticsDashboard = () => {
 
                 <ResponsiveContainer width="100%" height={400}>
                   <BarChart 
-                    data={(analysisData?.tag_frequency || []).slice(0, 15).map(([tag, count], index) => {
-                      // 조화로운 색상 매핑
+                    data={(analysisData?.tag_frequency || []).slice(0, 10).map(([tag, count], index) => {
+                      // 더 생동감 있는 색상 매핑
                       const getTagCategory = (tag) => {
                         const romance = ['로맨스', '순정', '소꿉친구', '첫사랑', '연애'];
                         const action = ['액션', '판타지', '무협', '회귀', '환생', '레벨업'];
                         const daily = ['일상','드라마', '가족', '개그', '직장', '학원'];
                         
-                        if (romance.some(r => tag.includes(r))) return { color: '#16a34a', category: '로맨스' }; // 초록
-                        if (action.some(a => tag.includes(a))) return { color: '#6D8196', category: '액션/판타지' }; // 블루그레이
-                        if (daily.some(d => tag.includes(d))) return { color: '#059669', category: '일상/드라마' }; // 에메랄드
-                        return { color: '#94a3b8', category: '기타' }; // 연한 회색
+                        if (romance.some(r => tag.includes(r))) return { color: '#ef4444', category: '로맨스' }; // 빨간색
+                        if (action.some(a => tag.includes(a))) return { color: '#3b82f6', category: '액션/판타지' }; // 파란색
+                        if (daily.some(d => tag.includes(d))) return { color: '#10b981', category: '일상/드라마' }; // 초록색
+                        return { color: '#8b5cf6', category: '기타' }; // 보라색
                       };
                       
                       const category = getTagCategory(tag);
@@ -307,6 +304,8 @@ const WebtoonAnalyticsDashboard = () => {
                       content={({ active, payload }) => {
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
+                          // 전체 태그 수 계산 (올바른 비율 계산)
+                          const totalTagCount = (analysisData?.tag_frequency || []).reduce((sum, [tag, count]) => sum + count, 0);
                           return (
                             <div className="bg-white border border-gray-200 p-4 rounded-xl">
                               <div className="font-bold text-lg mb-2 text-gray-800">#{data.rank} {data.tag}</div>
@@ -315,7 +314,7 @@ const WebtoonAnalyticsDashboard = () => {
                                 <p><span className="text-gray-600">카테고리:</span> <span className="font-bold" style={{color: data.fill}}>{data.category}</span></p>
                                 <div className="mt-2 pt-2 border-t border-gray-200">
                                   <p className="text-xs text-gray-500">
-                                    전체 태그 중 <strong>{((data.count / (analysisData?.tag_frequency?.[0]?.[1] || 1)) * 100).toFixed(1)}%</strong> 비율
+                                    전체 태그 중 <strong>{totalTagCount > 0 ? ((data.count / totalTagCount) * 100).toFixed(1) : 0}%</strong> 비율
                                   </p>
                                 </div>
                               </div>
@@ -372,7 +371,7 @@ const WebtoonAnalyticsDashboard = () => {
                           <span className="text-sm font-bold text-gray-800">35%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full" style={{width: '35%', backgroundColor: '#16a34a'}}></div>
+                          <div className="h-2 rounded-full bg-red-500" style={{width: '35%'}}></div>
                         </div>
                       </div>
                       <div>
@@ -381,7 +380,7 @@ const WebtoonAnalyticsDashboard = () => {
                           <span className="text-sm font-bold text-gray-800">28%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full" style={{width: '28%', backgroundColor: '#6D8196'}}></div>
+                          <div className="h-2 rounded-full bg-blue-500" style={{width: '28%'}}></div>
                         </div>
                       </div>
                       <div>
@@ -390,7 +389,7 @@ const WebtoonAnalyticsDashboard = () => {
                           <span className="text-sm font-bold text-gray-800">22%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full" style={{width: '22%', backgroundColor: '#059669'}}></div>
+                          <div className="h-2 rounded-full bg-green-500" style={{width: '22%'}}></div>
                         </div>
                       </div>
                       <div>
@@ -399,7 +398,7 @@ const WebtoonAnalyticsDashboard = () => {
                           <span className="text-sm font-bold text-gray-800">15%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="h-2 rounded-full" style={{width: '15%', backgroundColor: '#94a3b8'}}></div>
+                          <div className="h-2 rounded-full bg-purple-500" style={{width: '15%'}}></div>
                         </div>
                       </div>
                     </div>
@@ -433,7 +432,7 @@ const WebtoonAnalyticsDashboard = () => {
                 </div>
               </div>
 
-              {/* 평점 vs 조회수 산점도 */}
+              {/* 평점 vs 조회수 산점도 - 색상 및 점 크기 개선 */}
               <div className="bg-white rounded-xl border border-gray-200 p-6">
                 <h3 className="text-2xl font-bold text-green-700 mb-4 flex items-center">
                   <span className="mr-2">💎</span>
@@ -442,34 +441,34 @@ const WebtoonAnalyticsDashboard = () => {
                 
                 {/* 인사이트 카드 */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                  <div className="bg-gray-50 border border-red-200 p-4 rounded-lg">
+                  <div className="bg-gradient-to-r from-yellow-400 to-orange-500 border border-yellow-200 p-4 rounded-lg text-white">
                     <div className="flex items-center mb-2">
-                      <span className="text-red-500 text-lg mr-2">🔥</span>
-                      <h4 className="font-bold text-gray-800">대중성 (고조회수)</h4>
+                      <span className="text-xl mr-2">🔥</span>
+                      <h4 className="font-bold">대중성 (고조회수)</h4>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm opacity-90">
                       조회수 높음 → 평점 상대적 하락<br/>
                       <span className="font-semibold">바이럴 효과 &gt; 작품성</span>
                     </p>
                   </div>
                   
-                  <div className="bg-gray-50 border border-blue-200 p-4 rounded-lg">
+                  <div className="bg-gradient-to-r from-purple-500 to-pink-600 border border-blue-200 p-4 rounded-lg text-white">
                     <div className="flex items-center mb-2">
-                      <span className="text-blue-500 text-lg mr-2">⚖️</span>
-                      <h4 className="font-bold text-gray-800">균형점 (중간대)</h4>
+                      <span className="text-xl mr-2">⚖️</span>
+                      <h4 className="font-bold">균형점 (중간대)</h4>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm opacity-90">
                       적정 조회수 + 높은 평점<br/>
                       <span className="font-semibold">대중성 + 작품성</span>
                     </p>
                   </div>
                   
-                  <div className="bg-gray-50 border border-purple-200 p-4 rounded-lg">
+                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 border border-purple-200 p-4 rounded-lg text-white">
                     <div className="flex items-center mb-2">
-                      <span className="text-purple-500 text-lg mr-2">🎨</span>
-                      <h4 className="font-bold text-gray-800">틈새/실험작</h4>
+                      <span className="text-xl mr-2">🎨</span>
+                      <h4 className="font-bold">틈새/실험작</h4>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm opacity-90">
                       조회수 낮음 → 평점 극과극<br/>
                       <span className="font-semibold">호불호 명확</span>
                     </p>
@@ -502,24 +501,27 @@ const WebtoonAnalyticsDashboard = () => {
                       label={{ value: '평점', angle: -90, position: 'insideLeft', style: { fill: '#6b7280' } }}
                     />
                     
-                    {/* 조화로운 색상의 Scatter */}
+                    {/* 개선된 색상과 작은 점 크기의 Scatter */}
                     <Scatter 
                       name="고조회수 (1M+)" 
                       data={webtoons.filter(w => w.interest_count >= 1000000)} 
-                      fill="#6D8196"
-                      fillOpacity={0.7}
+                      fill="#f59e0b"
+                      fillOpacity={0.8}
+                      r={3}
                     />
                     <Scatter 
                       name="중간조회수 (100K-1M)" 
                       data={webtoons.filter(w => w.interest_count >= 100000 && w.interest_count < 1000000)} 
-                      fill="#16a34a"
-                      fillOpacity={0.7}
+                      fill="#8b5cf6"
+                      fillOpacity={0.8}
+                      r={3}
                     />
                     <Scatter 
                       name="저조회수 (100K 미만)" 
                       data={webtoons.filter(w => w.interest_count < 100000)} 
-                      fill="#059669"
-                      fillOpacity={0.7}
+                      fill="#10b981"
+                      fillOpacity={0.8}
+                      r={3}
                     />
                     
                     <Tooltip 
@@ -528,9 +530,9 @@ const WebtoonAnalyticsDashboard = () => {
                         if (active && payload && payload.length) {
                           const data = payload[0].payload;
                           const getCategory = (count) => {
-                            if (count >= 1000000) return { name: '대중성', color: 'text-gray-700', bg: 'bg-gray-50' };
-                            if (count >= 100000) return { name: '균형점', color: 'text-green-700', bg: 'bg-green-50' };
-                            return { name: '틈새작', color: 'text-emerald-700', bg: 'bg-emerald-50' };
+                            if (count >= 1000000) return { name: '대중성', color: 'text-yellow-700', bg: 'bg-yellow-50' };
+                            if (count >= 100000) return { name: '균형점', color: 'text-purple-700', bg: 'bg-purple-50' };
+                            return { name: '틈새작', color: 'text-green-700', bg: 'bg-green-50' };
                           };
                           
                           const category = getCategory(data.interest_count);
@@ -591,98 +593,64 @@ const WebtoonAnalyticsDashboard = () => {
           </div>
         )}
         
-                {/* 태그 네트워크 탭 */}
-                {selectedTab === 'network' && (
-                  <div className="space-y-8">
-                    <div className="text-center mb-8">
-                      <h2 className="text-3xl font-bold text-gray-800 mb-2">🕸️ 태그 연관성 네트워크</h2>
-                      <p className="text-gray-600">태그 간의 연관관계를 시각화하여 웹툰 트렌드를 파악합니다</p>
-                    </div>
-                    
-                    {networkLoading && (
-                      <div className="text-center py-8">
-                        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
-                        <p className="text-gray-600">네트워크 데이터 로딩 중...</p>
-                      </div>  
-                    )}
-                    
-                    <NetworkVisualization 
-                      analysisData={networkData || analysisData}
-                      width={900}
-                      height={700}
-                      className="mb-6"
-                      onTagSelect={(tag, selectedTags) => {
-                        console.log('App.js - 선택된 태그:', tag, selectedTags);
-                        // 선택된 태그로 네트워크 데이터를 다시 요청
-                        if (fetchNetworkData) {
-                          console.log('App.js - fetchNetworkData 호출:', selectedTags);
-                          fetchNetworkData(selectedTags);
-                        }
-                      }}
-                    />
-                    
-                    {/* 디버깅 정보 */}
-                    <div className="mt-4 p-4 bg-gray-100 rounded-lg text-sm">
-                      <h4 className="font-bold mb-2">데이터 상태 확인:</h4>
-                      <div>실제 백엔드 네트워크 데이터: {networkData ? '✅ 연결됨' : '❌ 미연결'}</div>
-                      <div>fallback 분석 데이터: {analysisData ? '✅ 있음' : '❌ 없음'}</div>
-                      {networkData && (
-                        <div>
-                          <div className="text-green-600 font-bold">
-                            백엔드 노드 수: {networkData.data?.nodes?.length || networkData.nodes?.length || 0}개
-                          </div>
-                          <div className="text-green-600 font-bold">
-                            백엔드 링크 수: {networkData.data?.links?.length || networkData.links?.length || 0}개
-                          </div>
-                          {networkData.data?.nodes && (
-                            <div className="text-blue-600">
-                              첫 번째 태그: "{networkData.data.nodes[0]?.id}"
-                            </div>
-                          )}
-                        </div>
-                      )}
-                      {!networkData && analysisData && (
-                        <div className="text-orange-600">
-                          fallback 데이터 사용 중 (태그 수: {analysisData.tag_frequency?.length || 0})
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-            
-            {/* 네트워크 인사이트 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl p-6">
-                <h4 className="font-bold text-lg mb-2 flex items-center">
-                  <span className="mr-2">🎯</span>
-                  핵심 태그
-                </h4>
-                <p className="text-sm opacity-90">
-                  '로맨스', '액션', '판타지'가 가장 중심적인 태그로 다른 태그들과 높은 연관성을 보입니다.
-                </p>
-              </div>
-              
-              <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-xl p-6 border border-gray-200">
-                <h4 className="font-bold text-lg mb-2 flex items-center">
-                  <span className="mr-2">🔗</span>
-                  강한 연결
-                </h4>
-                <p className="text-sm opacity-90">
-                  '회귀'와 '무협/사극', '로맨스'와 '순정남' 태그가 강한 동시 출현 패턴을 보입니다.
-                </p>
-              </div>
-              
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl p-6 border border-gray-200">
-                <h4 className="font-bold text-lg mb-2 flex items-center">
-                  <span className="mr-2">📈</span>
-                  트렌드 예측
-                </h4>
-                <p className="text-sm opacity-90">
-                  네트워크 중심성이 높은 태그들이 향후 웹툰 트렌드를 주도할 가능성이 높습니다.
-                </p>
-              </div>
+        {/* 태그 네트워크 탭 */}
+        {selectedTab === 'network' && (
+          <div className="space-y-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">🕸️ 태그 연관성 네트워크</h2>
+              <p className="text-gray-600">태그 간의 연관관계를 시각화하여 웹툰 트렌드를 파악합니다</p>
             </div>
-          </div>*/}
+            
+            {networkLoading && (
+              <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-600 mx-auto mb-4"></div>
+                <p className="text-gray-600">네트워크 데이터 로딩 중...</p>
+              </div>  
+            )}
+            
+            <NetworkVisualization 
+              analysisData={networkData || analysisData}
+              width={900}
+              height={700}
+              className="mb-6"
+              onTagSelect={(tag, selectedTags) => {
+                console.log('App.js - 선택된 태그:', tag, selectedTags);
+                // 선택된 태그로 네트워크 데이터를 다시 요청
+                if (fetchNetworkData) {
+                  console.log('App.js - fetchNetworkData 호출:', selectedTags);
+                  fetchNetworkData(selectedTags);
+                }
+              }}
+            />
+            
+            {/* 디버깅 정보 */}
+            <div className="mt-4 p-4 bg-gray-100 rounded-lg text-sm">
+              <h4 className="font-bold mb-2">데이터 상태 확인:</h4>
+              <div>실제 백엔드 네트워크 데이터: {networkData ? '✅ 연결됨' : '❌ 미연결'}</div>
+              <div>fallback 분석 데이터: {analysisData ? '✅ 있음' : '❌ 없음'}</div>
+              {networkData && (
+                <div>
+                  <div className="text-green-600 font-bold">
+                    백엔드 노드 수: {networkData.data?.nodes?.length || networkData.nodes?.length || 0}개
+                  </div>
+                  <div className="text-green-600 font-bold">
+                    백엔드 링크 수: {networkData.data?.links?.length || networkData.links?.length || 0}개
+                  </div>
+                  {networkData.data?.nodes && (
+                    <div className="text-blue-600">
+                      첫 번째 태그: "{networkData.data.nodes[0]?.id}"
+                    </div>
+                  )}
+                </div>
+              )}
+              {!networkData && analysisData && (
+                <div className="text-orange-600">
+                  fallback 데이터 사용 중 (태그 수: {analysisData.tag_frequency?.length || 0})
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* 히트맵 분석 탭 */}
         {selectedTab === 'heatmap' && (
@@ -759,7 +727,6 @@ const WebtoonAnalyticsDashboard = () => {
             </div>
           </div>
         )}
-
 
         {/* 추천 시스템 탭 */}
         {selectedTab === 'recommend' && (
