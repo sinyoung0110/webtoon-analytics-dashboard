@@ -18,10 +18,10 @@ const NetworkVisualization = ({
   const svgRef = useRef(null);
   const simulationRef = useRef(null);
 
-  // 한국어 색상 팔레트
+  // 테마 색상 팔레트 (녹색 계열)
   const colorScale = d3.scaleOrdinal()
     .domain(['장르', '테마', '설정', '스타일', '기타'])
-    .range(['#2563eb', '#16a34a', '#dc2626', '#7c3aed', '#ea580c']);
+    .range(['#16a34a', '#059669', '#047857', '#065f46', '#064e3b']);
 
   // 인기 한국어 태그 목록
   const popularTags = [
@@ -197,19 +197,14 @@ const NetworkVisualization = ({
       // 데이터가 없을 때
       console.log('NetworkVisualization - 네트워크 데이터 없음, 기본 메시지 표시');
       svg.attr("width", width).attr("height", height);
-      const g = svg.append("g");
-      g.append("rect")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("fill", "#f8fafc");
       
-      g.append("text")
+      svg.append("text")
         .attr("x", width / 2)
         .attr("y", height / 2)
         .attr("text-anchor", "middle")
-        .attr("font-size", "18px")
+        .attr("font-size", "16px")
         .attr("fill", "#6b7280")
-        .text("🕸️ 네트워크 데이터를 생성 중입니다...");
+        .text("네트워크 데이터를 불러오는 중...");
       return;
     }
 
@@ -225,26 +220,11 @@ const NetworkVisualization = ({
     
     svg.call(zoom);
     
-    // 배경 그라디언트
-    const defs = svg.append("defs");
-    const gradient = defs.append("radialGradient")
-      .attr("id", "networkBg")
-      .attr("cx", "50%")
-      .attr("cy", "50%")
-      .attr("r", "50%");
-    
-    gradient.append("stop")
-      .attr("offset", "0%")
-      .attr("stop-color", "#f8fafc");
-    
-    gradient.append("stop")
-      .attr("offset", "100%")
-      .attr("stop-color", "#e2e8f0");
-
+    // 깔끔한 배경
     svg.append("rect")
       .attr("width", width)
       .attr("height", height)
-      .attr("fill", "url(#networkBg)");
+      .attr("fill", "#ffffff");
     
     // 노드와 링크 데이터를 d3가 이해할 수 있도록 복사
     const nodesCopy = networkData.nodes.map(d => ({...d}));
@@ -273,9 +253,9 @@ const NetworkVisualization = ({
       .selectAll("line")
       .data(linksCopy)
       .enter().append("line")
-      .attr("stroke", "#94a3b8")
-      .attr("stroke-opacity", d => 0.3 + (d.value * 0.4))
-      .attr("stroke-width", d => d.width)
+      .attr("stroke", "#6b7280")
+      .attr("stroke-opacity", d => 0.2 + (d.value * 0.3))
+      .attr("stroke-width", d => Math.max(1, d.width * 0.8))
       .attr("stroke-linecap", "round");
     
     // 노드 그룹
@@ -344,8 +324,9 @@ const NetworkVisualization = ({
     nodeGroups.append("text")
       .text(d => getCategoryIcon(d.group))
       .attr("text-anchor", "middle")
-      .attr("dy", "-0.1em")
-      .attr("font-size", d => Math.min(d.size / 2.5, 16))
+      .attr("dy", "0.35em")
+      .attr("font-size", d => Math.min(d.size / 3, 14))
+      .attr("font-weight", "bold")
       .attr("fill", "#ffffff")
       .style("pointer-events", "none");
     
@@ -353,20 +334,20 @@ const NetworkVisualization = ({
     nodeGroups.append("text")
       .text(d => d.id)
       .attr("text-anchor", "middle")
-      .attr("dy", d => d.size + 18)
-      .attr("font-size", d => Math.min(d.size / 2.2, 14))
-      .attr("font-weight", "bold")
-      .attr("fill", "#334155")
+      .attr("dy", d => d.size + 16)
+      .attr("font-size", "12px")
+      .attr("font-weight", "600")
+      .attr("fill", "#1f2937")
       .attr("stroke", "#ffffff")
-      .attr("stroke-width", 0.5)
+      .attr("stroke-width", 2)
       .style("pointer-events", "none");
     
-    // 영향력 표시
+    // 영향력 표시 (간단한 원)
     nodeGroups.append("circle")
-      .attr("r", d => d.influence * 8)
-      .attr("cx", d => d.size * 0.6)
-      .attr("cy", d => -d.size * 0.6)
-      .attr("fill", "#fbbf24")
+      .attr("r", d => Math.max(2, d.influence * 6))
+      .attr("cx", d => d.size * 0.5)
+      .attr("cy", d => -d.size * 0.5)
+      .attr("fill", "#16a34a")
       .attr("stroke", "#ffffff")
       .attr("stroke-width", 1)
       .style("pointer-events", "none");
@@ -418,13 +399,13 @@ const NetworkVisualization = ({
 
   const getCategoryIcon = (category) => {
     const icons = {
-      '장르': '🎭',
-      '테마': '📖', 
-      '설정': '🏛️',
-      '스타일': '🎨',
-      '기타': '⭐'
+      '장르': 'G',
+      '테마': 'T', 
+      '설정': 'S',
+      '스타일': 'Y',
+      '기타': 'E'
     };
-    return icons[category] || '⭐';
+    return icons[category] || 'E';
   };
 
   const showTooltip = (event, d) => {

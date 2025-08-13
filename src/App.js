@@ -623,13 +623,27 @@ const WebtoonAnalyticsDashboard = () => {
                     
                     {/* 디버깅 정보 */}
                     <div className="mt-4 p-4 bg-gray-100 rounded-lg text-sm">
-                      <h4 className="font-bold mb-2">🔍 디버깅 정보:</h4>
-                      <div>networkData: {networkData ? '✅ 있음' : '❌ 없음'}</div>
-                      <div>analysisData: {analysisData ? '✅ 있음' : '❌ 없음'}</div>
+                      <h4 className="font-bold mb-2">데이터 상태 확인:</h4>
+                      <div>실제 백엔드 네트워크 데이터: {networkData ? '✅ 연결됨' : '❌ 미연결'}</div>
+                      <div>fallback 분석 데이터: {analysisData ? '✅ 있음' : '❌ 없음'}</div>
                       {networkData && (
                         <div>
-                          <div>네트워크 노드 수: {networkData.data?.nodes?.length || networkData.nodes?.length || 0}</div>
-                          <div>네트워크 링크 수: {networkData.data?.links?.length || networkData.links?.length || 0}</div>
+                          <div className="text-green-600 font-bold">
+                            백엔드 노드 수: {networkData.data?.nodes?.length || networkData.nodes?.length || 0}개
+                          </div>
+                          <div className="text-green-600 font-bold">
+                            백엔드 링크 수: {networkData.data?.links?.length || networkData.links?.length || 0}개
+                          </div>
+                          {networkData.data?.nodes && (
+                            <div className="text-blue-600">
+                              첫 번째 태그: "{networkData.data.nodes[0]?.id}"
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      {!networkData && analysisData && (
+                        <div className="text-orange-600">
+                          fallback 데이터 사용 중 (태그 수: {analysisData.tag_frequency?.length || 0})
                         </div>
                       )}
                     </div>
