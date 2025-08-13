@@ -74,10 +74,20 @@ class WebtoonAPI {
         params.append('selected_tags', selectedTags.join(','));
       }
 
-      const data = await this.request(`/api/analysis/network?${params}`);
-      return data.success ? data.data : null;
+      const url = `/api/analysis/network?${params}`;
+      console.log('네트워크 API 요청 URL:', `${this.baseURL}${url}`);
+      const data = await this.request(url);
+      console.log('네트워크 API 응답:', data);
+      
+      if (data.success) {
+        console.log('✅ 백엔드 네트워크 데이터 사용 - 노드 수:', data.data.nodes?.length);
+        return data;  // 전체 응답 반환 (data.data가 아닌 data)
+      } else {
+        console.log('❌ 백엔드 응답 실패, fallback 사용');
+        return this.getFallbackNetworkData();
+      }
     } catch (error) {
-      console.error('Error fetching network analysis:', error);
+      console.error('❌ 네트워크 API 오류, fallback 사용:', error);
       return this.getFallbackNetworkData();
     }
   }

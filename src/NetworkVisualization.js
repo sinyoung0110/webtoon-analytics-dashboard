@@ -220,12 +220,6 @@ const NetworkVisualization = ({
     
     svg.call(zoom);
     
-    // 깔끔한 배경
-    svg.append("rect")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("fill", "#ffffff");
-    
     // 노드와 링크 데이터를 d3가 이해할 수 있도록 복사
     const nodesCopy = networkData.nodes.map(d => ({...d}));
     const linksCopy = networkData.links.map(d => ({...d}));
