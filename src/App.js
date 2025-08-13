@@ -256,7 +256,7 @@ const WebtoonAnalyticsDashboard = () => {
                   </div>
                 </div>
 
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={400}>
                   <BarChart 
                     data={(analysisData?.tag_frequency || []).slice(0, 10).map(([tag, count], index) => {
                       // 조화로운 색상 매핑 - 원래 색상 유지
@@ -280,7 +280,7 @@ const WebtoonAnalyticsDashboard = () => {
                         rank: index + 1
                       };
                     })}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis 
@@ -506,22 +506,22 @@ const WebtoonAnalyticsDashboard = () => {
                       name="고조회수 (1M+)" 
                       data={webtoons.filter(w => w.interest_count >= 1000000)} 
                       fill="#059669"
-                      fillOpacity={0.7}
+                      fillOpacity={0.9}
                       r={1}
                     />
                     <Scatter 
                       name="중간조회수 (100K-1M)" 
                       data={webtoons.filter(w => w.interest_count >= 100000 && w.interest_count < 1000000)} 
                       fill="#16a34a"
-                      fillOpacity={0.7}
-                      r={3}
+                      fillOpacity={0.5}
+                      r={1}
                     />
                     <Scatter 
                       name="저조회수 (100K 미만)" 
                       data={webtoons.filter(w => w.interest_count < 100000)} 
                       fill="#6D8196"
-                      fillOpacity={0.7}
-                      r={3}
+                      fillOpacity={0.3}
+                      r={1}
                     />
                     
                     <Tooltip 
