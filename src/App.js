@@ -83,7 +83,7 @@ const WebtoonAnalyticsDashboard = () => {
   const CustomHeatmap = () => {
     const maxValue = heatmapData.length > 0 ? Math.max(...heatmapData.map(d => d.count)) : 1;
     
-    const genres = ['로맨스', '액션', '판타지', '드라마', '무협/사극', '일상'];
+    const genres = ['로맨스', '액션', '판타지', '드라마', '스릴러', '일상'];
     const demographics = ['남성-10대', '남성-20대', '남성-30대', '여성-10대', '여성-20대', '여성-30대'];
     
     // 개선된 색상 함수 (초록 테마)

@@ -59,6 +59,46 @@ class EnhancedWebtoonAPI {
       return this.getFallbackTagAnalysis();
     }
   }
+  // 새로운 네트워크 분석 데이터 조회
+  async fetchNetworkAnalysis(selectedTags = [], minCorrelation = 0.2, maxNodes = 30) {
+    try {
+      const params = new URLSearchParams({
+        min_correlation: minCorrelation,
+        max_nodes: maxNodes
+      });
+      
+      if (selectedTags.length > 0) {
+        params.append('selected_tags', selectedTags.join(','));
+      }
+
+      const url = `/api/analysis/network?${params}`;
+      console.log('네트워크 API 요청 URL:', `${this.baseURL}${url}`);
+      const data = await this.request(url);
+      console.log('네트워크 API 응답:', data);
+      
+      if (data.success) {
+        console.log('✅ 백엔드 네트워크 데이터 사용 - 노드 수:', data.data.nodes?.length);
+        return data;  // 전체 응답 반환 (data.data가 아닌 data)
+      } else {
+        console.log('❌ 백엔드 응답 실패, fallback 사용');
+        return this.getFallbackNetworkData();
+      }
+    } catch (error) {
+      console.error('❌ 네트워크 API 오류, fallback 사용:', error);
+      return this.getFallbackNetworkData();
+    }
+  }
+
+  // 관련 태그 조회
+  async fetchRelatedTags(tag, limit = 10) {
+    try {
+      const data = await this.request(`/api/analysis/related-tags/${encodeURIComponent(tag)}?limit=${limit}`);
+      return data.success ? data.data : null;
+    } catch (error) {
+      console.error('Error fetching related tags:', error);
+      return null;
+    }
+  }
 
   // 새로운 TF-IDF API들
   async fetchTFIDFAnalysis() {
